@@ -13,6 +13,8 @@
     "framer-motion": "^11.11.11",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
+    "react-icon": "^1.0.0",
+    "react-icons": "^5.3.0",
     "react-router-dom": "^6.7.0",
     "react-scripts": "^5.0.1",
     "tailwindcss": "^3.4.14"
@@ -22,7 +24,10 @@
     "test:e2e": "jest",
     "build": "react-scripts build",
     "build:package": "cd ../../../ && npm run build:all --workspace=lib/msal-react",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "upload-s3": "aws s3 cp build/ s3://www.appstreamauth.live",
+    "invalidate-cf-cache": "aws cloudfront create-invalidation --distribution-id E2E44B3D6WPBEW --paths '/*'",
+    "deploy-s3": "npm run build && npm run upload-s3 && npm run invalidate-cf-cache"
   },
   "browserslist": {
     "production": [

@@ -3,7 +3,7 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 
 // MSAL imports
-import { MsalProvider } from "@azure/msal-react";
+import { MsalProvider, useMsal } from "@azure/msal-react";
 import { CustomNavigationClient } from "./utils/NavigationClient";
 
 // Sample app imports
@@ -19,6 +19,8 @@ import { ProfileUseMsalAuthenticationHook } from "./pages/ProfileUseMsalAuthenti
 import StreamRedirect from "./pages/StreamRedirect";
 import ErrorPage from "./pages/ErrorPage";
 import FloatingShape from "./ui-components/FloatingShape";
+import AdminDashboard from "./pages/AdminDashboard";
+import ProtectedRoute from "./ui-components/ProtectedRoute";
 
 function App({ pca }) {
   // The next 3 lines are optional. This is how you configure MSAL to take advantage of the router's navigate functions when MSAL redirects between pages in your app
@@ -66,6 +68,14 @@ function Pages() {
         <Route path="/stream-redirect" element={<StreamRedirect />} />
         <Route path="/profileWithMsal" element={<ProfileWithMsal />} />
         <Route path="/profileRawContext" element={<ProfileRawContext />} />
+        <Route
+          path="/admin-dashboard"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path="/profileUseMsalAuthenticationHook"

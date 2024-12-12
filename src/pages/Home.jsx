@@ -8,8 +8,11 @@ import { motion } from "framer-motion";
 import { Link as RouterLink } from "react-router-dom";
 import Logo from "../assets/AppStream.svg";
 import { loginRequest } from "../authConfig";
+import adminList from "../adminList";
 export function Home() {
-  const { instance } = useMsal();
+  const { instance, accounts } = useMsal();
+
+  const isAdmin = accounts[0] && adminList.includes(accounts[0]?.username);
 
   const handleLogin = (loginType) => {
     if (loginType === "popup") {
@@ -41,6 +44,23 @@ export function Home() {
             <span className="font-bold mt-2 text-white">My Stream</span>
           </RouterLink>
         </motion.button>
+        {isAdmin && (
+          <motion.button
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="absolute top-0 right-0 m-20"
+          >
+            <RouterLink
+              to="/admin-dashboard"
+              className="px-8 py-6 bg-red-600 bg-opacity-90 backdrop-filter backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden items-center flex flex-col"
+            >
+              <span className="font-bold mt-2 text-white">Admin Dashboard</span>
+            </RouterLink>
+          </motion.button>
+        )}
       </AuthenticatedTemplate>
 
       <UnauthenticatedTemplate>
