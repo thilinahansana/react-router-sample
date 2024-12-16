@@ -12,20 +12,43 @@ const AdminDashboard = () => {
   const [searchTerm, setSearchTerm] = useState(""); // Search term state
   const [statusFilter, setStatusFilter] = useState("all"); // Status filter state
   const [durationFilter, setDurationFilter] = useState("all"); // Duration filter state
+  const [sortColumn, setSortColumn] = useState("createdTime"); // Sorting column state
+  const [sortOrder, setSortOrder] = useState("ASC"); // Sorting order state
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const params = {
+          searchColumn: "email", // Column to search in
+          searchValue: searchTerm,
+          sortColumn: sortColumn,
+          sortOrder: sortOrder,
+        };
+
+        if (statusFilter !== "all") {
+          params.statusFilter = statusFilter;
+        }
+        if (durationFilter !== "all") {
+          params.durationFilter = durationFilter;
+        }
+
         const response = await axios.get(
-          `https://kecsb4zutd.execute-api.ap-south-1.amazonaws.com/dev/as-user?userId=h.thilina@gtngroup.com`
+          "https://pdadd4zki6.execute-api.ap-south-1.amazonaws.com/dev/user-session",
+          { params }
         );
 
         const data = response.data;
+        console.log(data);
+
+        // Check if data exists and handle None values
+        // if (!data || !data.start_time || !data.end_time) {
+        //   throw new Error("Missing session data");
+        // }
+
         const startTime = new Date(data.start_time);
         const endTime = new Date(data.end_time);
         const durationMs = endTime - startTime;
 
-        // Calculate session duration
         let sessionDuration = "Session duration invalid.";
         let status = "Inactive";
         if (durationMs > 0) {
@@ -39,36 +62,54 @@ const AdminDashboard = () => {
 
         setUserData([
           {
-            userId: data.userId || "h.thilina@gtngroup.com",
+            userId: data.userId,
             sessionDuration,
             status,
             durationMs,
           },
         ]);
       } catch (err) {
+        console.error("Error fetching data:", err);
         setError("Failed to fetch user data");
       } finally {
         setLoading(false);
       }
     };
+
     fetchData();
-  }, []);
+  }, [searchTerm, statusFilter, durationFilter, sortColumn, sortOrder]); // Dependencies
 
   // Filter logic
   const filteredData = userData.filter((user) => {
-    const matchesSearchTerm = user.userId
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
+    const matchesSearchTerm =
+      user.userId &&
+      user.userId.toLowerCase().includes(searchTerm.toLowerCase());
+
     const matchesStatus =
       statusFilter === "all" || user.status.toLowerCase() === statusFilter;
+
     const matchesDuration = (() => {
       if (durationFilter === "all") return true;
-      if (durationFilter === "short") return user.durationMs < 3600000; // Less than 1 hour
-      if (durationFilter === "long") return user.durationMs >= 3600000; // 1 hour or more
+      if (durationFilter === "short") return user.durationMs < 3600000;
+      if (durationFilter === "long") return user.durationMs >= 3600000;
       return true;
     })();
 
     return matchesSearchTerm && matchesStatus && matchesDuration;
+  });
+
+  // Sorting logic
+  const sortedData = filteredData.sort((a, b) => {
+    if (sortColumn === "email") {
+      return sortOrder === "ASC"
+        ? a.userId.localeCompare(b.userId)
+        : b.userId.localeCompare(a.userId);
+    } else if (sortColumn === "sessionDuration") {
+      return sortOrder === "ASC"
+        ? a.durationMs - b.durationMs
+        : b.durationMs - a.durationMs;
+    }
+    return 0;
   });
 
   if (loading) {
@@ -162,7 +203,7 @@ const AdminDashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredData.map((user, index) => (
+              {sortedData.map((user, index) => (
                 <motion.tr
                   key={user.userId}
                   initial={{ opacity: 0 }}
