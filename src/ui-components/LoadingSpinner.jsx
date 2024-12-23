@@ -5,7 +5,7 @@ const LoadingSpinner = () => {
     <div className="">
       {/* Simple Loading Spinner */}
       <motion.div
-        className="w-16 h-16 border-4 border-t-4 border-t-blue-500 border-blue-200 rounded-full"
+        className="w-10 h-10 border-4 border-t-4 border-t-blue-500 border-blue-200 rounded-full"
         animate={{ rotate: 360 }}
         transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
       />

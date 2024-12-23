@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 
 import { Link as RouterLink } from "react-router-dom";
 import Logo from "../assets/AppStream.svg";
+import admin from "../assets/user-setting.png";
 import { loginRequest } from "../authConfig";
 import adminList from "../adminList";
 export function Home() {
@@ -51,12 +52,13 @@ export function Home() {
             transition={{ duration: 0.2 }}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="absolute top-0 right-0 m-20"
+            className="absolute top-0 left-40 m-20"
           >
             <RouterLink
-              to="/admin-dashboard"
-              className="px-8 py-6 bg-red-600 bg-opacity-90 backdrop-filter backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden items-center flex flex-col"
+              to="/dashboard"
+              className="px-8 py-6 bg-white bg-opacity-10 backdrop-filter backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden items-center flex flex-col"
             >
+              <img src={admin} alt="Redirect" width={40} height={40} />
               <span className="font-bold mt-2 text-white">Admin Dashboard</span>
             </RouterLink>
           </motion.button>

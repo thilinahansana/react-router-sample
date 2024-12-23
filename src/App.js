@@ -21,6 +21,15 @@ import ErrorPage from "./pages/ErrorPage";
 import FloatingShape from "./ui-components/FloatingShape";
 import AdminDashboard from "./pages/AdminDashboard";
 import ProtectedRoute from "./ui-components/ProtectedRoute";
+import AdminHome from "./pages/admin/AdminHome";
+import Tables from "./pages/admin/Tables";
+import Billing from "./pages/admin/Billing";
+import ProfilePage from "./pages/admin/Profile";
+import Main from "./components/layout/Main";
+
+import "antd";
+import "./assets/styles/main.css";
+import "./assets/styles/responsive.css";
 
 function App({ pca }) {
   // The next 3 lines are optional. This is how you configure MSAL to take advantage of the router's navigate functions when MSAL redirects between pages in your app
@@ -41,7 +50,7 @@ function App({ pca }) {
 
 function Pages() {
   return (
-    <div className="min-h-screen w-full  bg-gradient-to-r from-blue-900 via-indigo-900 to-sky-900 flex items-center justify-center relative overflow-hidden">
+    <div className="min-h-screen w-full bg-gradient-to-r from-blue-900 via-indigo-900 to-sky-900 flex items-center justify-center relative overflow-hidden">
       <FloatingShape
         color="bg-blue-500"
         size="w-64 h-64"
@@ -69,20 +78,24 @@ function Pages() {
         <Route path="/profileWithMsal" element={<ProfileWithMsal />} />
         <Route path="/profileRawContext" element={<ProfileRawContext />} />
         <Route
-          path="/admin-dashboard"
-          element={
-            <ProtectedRoute>
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
           path="/profileUseMsalAuthenticationHook"
           element={<ProfileUseMsalAuthenticationHook />}
         />
         <Route path="/logout" element={<Logout />} />
         <Route path="/" element={<Home />} />
+
+        <Route
+          element={
+            <ProtectedRoute>
+              <Main />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="/dashboard" element={<AdminHome />} />
+          <Route path="/tables" element={<Tables />} />
+          <Route path="/billing" element={<Billing />} />
+          <Route path="/userprofile" element={<ProfilePage />} />
+        </Route>
       </Routes>
     </div>
   );

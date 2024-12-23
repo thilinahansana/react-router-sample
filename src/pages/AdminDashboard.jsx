@@ -9,17 +9,17 @@ const AdminDashboard = () => {
   const [userData, setUserData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState(""); // Search term state
-  const [statusFilter, setStatusFilter] = useState("all"); // Status filter state
-  const [durationFilter, setDurationFilter] = useState("all"); // Duration filter state
-  const [sortColumn, setSortColumn] = useState("createdTime"); // Sorting column state
-  const [sortOrder, setSortOrder] = useState("ASC"); // Sorting order state
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [durationFilter, setDurationFilter] = useState("all");
+  const [sortColumn, setSortColumn] = useState("createdTime");
+  const [sortOrder, setSortOrder] = useState("ASC");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const params = {
-          searchColumn: "email", // Column to search in
+          searchColumn: "email",
           searchValue: searchTerm,
           sortColumn: sortColumn,
           sortOrder: sortOrder,
@@ -40,24 +40,19 @@ const AdminDashboard = () => {
         const data = response.data;
         console.log(data);
 
-        // Check if data exists and handle None values
-        // if (!data || !data.start_time || !data.end_time) {
-        //   throw new Error("Missing session data");
-        // }
-
         const startTime = new Date(data.start_time);
         const endTime = new Date(data.end_time);
         const durationMs = endTime - startTime;
 
         let sessionDuration = "Session duration invalid.";
-        let status = "Inactive";
+        let status = "INACTIVE";
         if (durationMs > 0) {
           const hours = Math.floor(durationMs / (1000 * 60 * 60));
           const minutes = Math.floor(
             (durationMs % (1000 * 60 * 60)) / (1000 * 60)
           );
           sessionDuration = `${hours} hrs ${minutes} mins`;
-          status = "Active";
+          status = "ACTIVE";
         }
 
         setUserData([
@@ -77,9 +72,8 @@ const AdminDashboard = () => {
     };
 
     fetchData();
-  }, [searchTerm, statusFilter, durationFilter, sortColumn, sortOrder]); // Dependencies
+  }, [searchTerm, statusFilter, durationFilter, sortColumn, sortOrder]);
 
-  // Filter logic
   const filteredData = userData.filter((user) => {
     const matchesSearchTerm =
       user.userId &&
@@ -98,7 +92,6 @@ const AdminDashboard = () => {
     return matchesSearchTerm && matchesStatus && matchesDuration;
   });
 
-  // Sorting logic
   const sortedData = filteredData.sort((a, b) => {
     if (sortColumn === "email") {
       return sortOrder === "ASC"
@@ -170,8 +163,8 @@ const AdminDashboard = () => {
                 className="px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
               >
                 <option value="all">All Statuses</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
+                <option value="ACTIVE">Active</option>
+                <option value="DEACTIVE">Deactive</option>
               </select>
 
               <select
