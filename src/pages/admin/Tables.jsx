@@ -247,8 +247,9 @@ function Tables() {
                   >
                     <Radio.Button value="all">All</Radio.Button>
                     <Radio.Button value="active">Active</Radio.Button>
-                    <Radio.Button value="deactive">Deactive</Radio.Button>
-                    <Radio.Button value="inactive">Inactive</Radio.Button>
+                    <Radio.Button value="deactive">Inactive</Radio.Button>
+                    <Radio.Button value="inactive">Not Started</Radio.Button>
+                    <Radio.Button value="status">Ticket Status</Radio.Button>
                   </Radio.Group>
                   <input
                     type="text"
